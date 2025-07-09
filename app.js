@@ -46,7 +46,7 @@ app.post('/', async (req, res) => {
   let replyText = '';
 
   if (msgBody === 'hi' || msgBody === 'hello') {
-    replyText = 'Hi, how are you today? 😊';
+    replyText = 'Hello, how are you today? 😊';
   } else if (msgBody.includes('how are you')) {
     replyText = 'I’m just a bot, but I’m running smoothly! What about you?';
   } else if (msgBody.includes('thanks') || msgBody.includes('thank you')) {
