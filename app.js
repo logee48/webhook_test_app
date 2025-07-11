@@ -51,12 +51,23 @@ app.post('/', async (req, res) => {
     replyText = 'I’m just a bot, but I’m running smoothly! What about you?';
   } else if (msgBody.includes('thanks') || msgBody.includes('thank you')) {
     replyText = 'You’re welcome! Let me know if you need anything else. 🙌';
-  }
-  else if (msgBody.startsWith('ask ')) {
-    const userQuestion = msgBody.slice(4).trim();
-    replyText = await askGemini(userQuestion, pdfText);
   } else {
-    replyText = `You said: ${msgBody}`;
+    // Check if the question is within the PDF context
+    const contextCheckPrompt = `Based on the following PDF content, determine if the user's question is related to the topics covered in the PDF. Answer with only "YES" if the question is relevant to the PDF content, or "NO" if it's not related.\n\nPDF Content:\n${pdfText}\n\nUser Question: ${msgBody}\n\nAnswer (YES/NO):`;
+    try {
+      const contextResponse = await askGemini(contextCheckPrompt, pdfText);
+      const isInContext = contextResponse.trim().toUpperCase().includes('YES');
+      if (isInContext) {
+        // Question is within context, get the answer
+        replyText = await askGemini(msgBody, pdfText);
+      } else {
+        // Question is out of context
+        replyText = "Sorry, we can't answer that. If you have any query, please contact us.";
+      }
+    } catch (error) {
+      console.error('Error checking context:', error);
+      replyText = "Sorry, we can't answer that. If you have any query, please contact us.";
+    }
   }
 
   // Send reply
