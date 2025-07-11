@@ -1,10 +1,10 @@
 const fs = require('fs');
-const pdf = require('pdf-parse');
+const pdfParse = require('pdf-parse');
 
-async function extractPdfText(filePath) {
-  const dataBuffer = fs.readFileSync(filePath);
-  const data = await pdf(dataBuffer);
+async function extractTextFromPDF(pdfPath) {
+  const buffer = fs.readFileSync(pdfPath);
+  const data = await pdfParse(buffer);
   return data.text;
 }
 
-module.exports = { extractPdfText };
+module.exports = { extractTextFromPDF };
