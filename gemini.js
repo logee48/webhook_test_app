@@ -1,26 +1,37 @@
 // gemini.js
 const axios = require('axios');
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyB-8swYXv9ToNlnusxcCaMYq2CZId1hhNw';
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 async function askGemini(question, contextText) {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+  try {
+    const response = await axios.post(GEMINI_ENDPOINT, {
+      contents: [
+        {
+          parts: [
+            {
+              text: `You are a helpful assistant. Answer the question using the context from the PDF below.
 
-  const prompt = `You are a helpful assistant. Answer based only on the context below.\n\nContext:\n${contextText}\n\nQuestion:\n${question}`;
+Context:
+${contextText}
 
-  const response = await axios.post(endpoint, {
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: prompt }]
-      }
-    ]
-  }, {
-    headers: { 'Content-Type': 'application/json' }
-  });
+Question:
+${question}
+`,
+            },
+          ],
+        },
+      ],
+    });
 
-  const reply = response.data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't understand.";
-  return reply;
+    const answer =
+      response.data.candidates?.[0]?.content?.parts?.[0]?.text || "No answer found.";
+    return answer;
+  } catch (error) {
+    console.error("Gemini API error:", error.response?.data || error.message);
+    return "Error getting answer from Gemini.";
+  }
 }
 
 module.exports = { askGemini };
