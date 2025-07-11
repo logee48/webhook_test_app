@@ -1,4 +1,4 @@
-const { extractPdfText } = require('./pdf_reader');
+const { extractTextFromPDF } = require('./pdf_reader');
 const { askGemini } = require('./gemini');
 const express = require('express');
 const axios = require('axios');
@@ -13,7 +13,7 @@ const phoneNumberId = process.env.PHONE_NUMBER_ID;
 let pdfText = '';
 
 (async () => {
-  pdfText = await extractPdfText('./setOfQuestions.pdf'); // Preload PDF once
+  pdfText = await extractTextFromPDF('./setOfQuestions.pdf'); // Preload PDF once
 })();
 
 app.get('/', (req, res) => {
@@ -46,7 +46,7 @@ app.post('/', async (req, res) => {
   let replyText = '';
 
   if (msgBody === 'hi' || msgBody === 'hello') {
-    replyText = 'Hello, how are you today? 😊';
+    replyText = 'Hi, how are you today? 😊';
   } else if (msgBody.includes('how are you')) {
     replyText = 'I’m just a bot, but I’m running smoothly! What about you?';
   } else if (msgBody.includes('thanks') || msgBody.includes('thank you')) {
