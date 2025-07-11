@@ -4,7 +4,7 @@ const axios = require('axios');
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 async function askGemini(question, contextText) {
-  const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
   const prompt = `You are a helpful assistant. Answer based only on the context below.\n\nContext:\n${contextText}\n\nQuestion:\n${question}`;
 
