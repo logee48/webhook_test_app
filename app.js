@@ -13,7 +13,7 @@ const phoneNumberId = process.env.PHONE_NUMBER_ID;
 let pdfText = '';
 
 (async () => {
-  pdfText = await extractTextFromPDF('./setOfQuestions.pdf'); // Preload PDF once
+  pdfText = await extractTextFromPDF('./modified_questions.pdf'); // Preload PDF once
 })();
 
 app.get('/', (req, res) => {
